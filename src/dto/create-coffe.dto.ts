@@ -1,32 +1,49 @@
-import { IsNotEmpty, IsOptional, IsString, IsNumber, IsArray } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, Min } from "class-validator"
+import { Type } from "class-transformer"
 
 export class CreateCoffeeDto {
   @IsString()
-  @IsNotEmpty()
-  nome: string;
+  @IsNotEmpty({ message: "O ID é obrigatório" })
+  id: string
 
   @IsString()
-  @IsNotEmpty()
-  tipo: string;
+  @IsNotEmpty({ message: "O nome é obrigatório" })
+  nome: string
 
   @IsString()
-  @IsNotEmpty()
-  id: string;
+  @IsNotEmpty({ message: "O tipo é obrigatório" })
+  tipo: string
 
   @IsOptional()
-  @IsNumber()
-  quantidade?: number;
+  @IsNumber({}, { message: "A quantidade deve ser um número" })
+  @Min(0, { message: "A quantidade deve ser maior ou igual a 0" })
+  @Type(() => Number)
+  quantidade?: number
 
   @IsOptional()
-  @IsNumber()
-  preco?: number;
+  @IsNumber({}, { message: "O preço deve ser um número" })
+  @Min(0, { message: "O preço deve ser maior ou igual a 0" })
+  @Type(() => Number)
+  preco?: number
 
   @IsOptional()
   @IsString()
-  descricao?: string;
+  descricao?: string
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  tags?: string[];
+  @IsArray({ message: "Tags deve ser um array" })
+  @IsString({ each: true, message: "Cada tag deve ser uma string" })
+  tags?: string[]
+
+  @IsOptional()
+  @Type(() => Date)
+  dataCriacao?: Date
+
+  @IsOptional()
+  @Type(() => Date)
+  startDate?: Date
+
+  @IsOptional()
+  @Type(() => Date)
+  endDate?: Date
 }
