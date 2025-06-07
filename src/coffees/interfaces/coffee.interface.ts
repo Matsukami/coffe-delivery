@@ -1,12 +1,9 @@
 export interface Coffee {
-  id: string
-  nome: string
-  tipo: string
-  quantidade?: number
-  preco?: number
-  descricao?: string
-  tags?: string[]
-  dataCriacao?: Date
-  startDate?: Date
-  endDate?: Date
+  id: number;
+  nome: string;
+  tipo: string;
+  preco: number;
+  description: string;
+  itensPedido?: string | null;
+  tags?: { id: number; nome: string; cafeId: number }[];
 }

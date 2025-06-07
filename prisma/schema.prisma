@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Cafe {
+  id           Int          @id @default(autoincrement())
+  nome         String
+  tipo         String
+  preco        Float
+  description  String
+  tags         TagCafe[]
+  itensPedido  ItemPedido[]
+}
+
+model TagCafe {
+  id      Int   @id @default(autoincrement())
+  nome    String
+  cafeId  Int
+  cafe    Cafe  @relation(fields: [cafeId], references: [id], onDelete: Cascade)
+}
+
+model Cliente {
+  id          Int        @id @default(autoincrement())
+  nome        String
+  email       String     @unique
+  cpf         String     @unique
+  telefone    String
+  pedidos     Pedido[]
+}
+
+model ItemPedido {
+  id            Int      @id @default(autoincrement())
+  cafeId        Int
+  pedidoId      Int
+  quantidade    Int
+  precoUnitario Float
+  cafe          Cafe     @relation(fields: [cafeId], references: [id], onDelete: Cascade)
+  pedido        Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+}
+
+model Pedido {
+  id          Int          @id @default(autoincrement())
+  clienteId   Int
+  dataPedido  DateTime     @default(now())
+  totalPedido Float
+  status      String
+  itens       ItemPedido[]
+  cliente     Cliente      @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  entregas    Entrega[] 
+}
+
+model Entrega {
+  id              Int      @id @default(autoincrement())
+  pedidoId        Int
+  enderecoEntrega String
+  dataEntrega     DateTime @default(now())
+  status          String
+  pedido          Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+}
